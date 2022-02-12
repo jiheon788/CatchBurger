@@ -35,13 +35,13 @@ character_y_pos = screen_height - character_height # 화면 세로 크기 가장
 character_speed = 10
 
 # enemy 캐릭터 불러오기
-stink = pygame.image.load(os.path.join(image_path, "stink.png"))
-stink_size = stink.get_rect().size # 이미지 크기를 구해옴
-stink_width = stink_size[0] # 캐릭터의 가로 크기
-stink_height = stink_size[1] # 캐릭터의 세로 크기
-stink_x_pos = random.randint(0, screen_width - stink_width) # 화면 가로의 절반크기에 해당하는곳에 위치
-stink_y_pos = 0 # 화면 세로 크기 가장 아해에 위치
-stink_speed = 12
+trash = pygame.image.load(os.path.join(image_path, "trash.png"))
+trash_size = trash.get_rect().size # 이미지 크기를 구해옴
+trash_width = trash_size[0] # 캐릭터의 가로 크기
+trash_height = trash_size[1] # 캐릭터의 세로 크기
+trash_x_pos = random.randint(0, screen_width - trash_width) # 화면 가로의 절반크기에 해당하는곳에 위치
+trash_y_pos = 0 # 화면 세로 크기 가장 아해에 위치
+trash_speed = 11
 
 # burger 캐릭터 불러오기
 burger = pygame.image.load(os.path.join(image_path, "burger.png"))
@@ -50,7 +50,7 @@ burger_width = burger_size[0] # 캐릭터의 가로 크기
 burger_height = burger_size[1] # 캐릭터의 세로 크기
 burger_x_pos = random.randint(0, screen_width - burger_width) # 화면 가로의 절반크기에 해당하는곳에 위치
 burger_y_pos = 0 # 화면 세로 크기 가장 아해에 위치
-burger_speed = 16
+burger_speed = 15
 
 # coke 캐릭터 불러오기
 coke = pygame.image.load(os.path.join(image_path, "coke.png"))
@@ -68,13 +68,22 @@ stars_width = stars_size[0] # 캐릭터의 가로 크기
 stars_height = stars_size[1] # 캐릭터의 세로 크기
 stars_x_pos = 0 # 화면 가로의 절반크기에 해당하는곳에 위치
 stars_y_pos = 0 # 화면 세로 크기 가장 아해에 위치
-stars_speed = 14
+stars_speed = 15
+
+# stink 캐릭터 불러오기
+stink = pygame.image.load(os.path.join(image_path, "stink.png"))
+stink_size = stink.get_rect().size 
+stink_width = stink_size[0] 
+stink_height = stink_size[1] 
+stink_x_pos = 0 
+stink_y_pos = 0 
+stink_speed = 15
 
 # 폰트 정의
 game_font = pygame.font.Font(None, 40) # 폰트객체 생성 (폰트, 크기)
 
 # 총 시간
-total_time = 60
+total_time = 50
 
 # 시작 시간 정보
 start_ticks = pygame.time.get_ticks() # 현재 틱을 받아옴
@@ -114,10 +123,10 @@ while running:
   elif character_x_pos > screen_width - character_width:
     character_x_pos = screen_width - character_width
 
-  stink_y_pos += stink_speed
-  if stink_y_pos > screen_height:
-    stink_y_pos = 0
-    stink_x_pos = random.randint(0, screen_width - stink_width)
+  trash_y_pos += trash_speed
+  if trash_y_pos > screen_height:
+    trash_y_pos = 0
+    trash_x_pos = random.randint(0, screen_width - trash_width)
 
   burger_y_pos += burger_speed
   if burger_y_pos > screen_height:
@@ -130,15 +139,17 @@ while running:
     coke_x_pos = random.randint(0, screen_width - coke_width)
 
   stars_y_pos += stars_speed
+
+  stink_y_pos += stink_speed
   
   # 충돌 처리
   character_rect = character.get_rect()
   character_rect.left = character_x_pos
   character_rect.top = character_y_pos
 
-  stink_rect = stink.get_rect()
-  stink_rect.left = stink_x_pos
-  stink_rect.top = stink_y_pos
+  trash_rect = trash.get_rect()
+  trash_rect.left = trash_x_pos
+  trash_rect.top = trash_y_pos
 
   burger_rect = burger.get_rect()
   burger_rect.left = burger_x_pos
@@ -152,17 +163,23 @@ while running:
   stars_rect.left = stars_x_pos
   stars_rect.top = stars_y_pos
 
+  stink_rect = stink.get_rect()
+  stink_rect.left = stink_x_pos
+  stink_rect.top = stink_y_pos
+
   # 충돌 체크
-  if character_rect.colliderect(stink_rect):
-    print("충돌했어요.")
+  if character_rect.colliderect(trash_rect):
+    # print("충돌했어요.")
     score -= 5000
-    stink_y_pos = 0
-    stink_x_pos = random.randint(0, screen_width - stink_width)
+    stink_y_pos = trash_y_pos - 20
+    stink_x_pos = trash_x_pos
+    trash_y_pos = 0
+    trash_x_pos = random.randint(0, screen_width - trash_width)
     # running = False
   
   if character_rect.colliderect(burger_rect):
     score += 1000
-    stars_y_pos = burger_y_pos
+    stars_y_pos = burger_y_pos - 20
     stars_x_pos = burger_x_pos
     burger_y_pos = 0
     burger_x_pos = random.randint(0, screen_width - burger_width)
@@ -170,7 +187,7 @@ while running:
 
   if character_rect.colliderect(coke_rect):
     score += 500
-    stars_y_pos = coke_y_pos
+    stars_y_pos = coke_y_pos - 20
     stars_x_pos = coke_x_pos
     coke_y_pos = 0
     coke_x_pos = random.randint(0, screen_width - coke_width)
@@ -178,10 +195,11 @@ while running:
   
   screen.blit(background, (0, 0))
   screen.blit(character, (character_x_pos, character_y_pos)) 
-  screen.blit(stink, (stink_x_pos, stink_y_pos)) 
+  screen.blit(trash, (trash_x_pos, trash_y_pos)) 
   screen.blit(burger, (burger_x_pos, burger_y_pos))  
   screen.blit(coke, (coke_x_pos, coke_y_pos))
   screen.blit(stars, (stars_x_pos, stars_y_pos))
+  screen.blit(stink, (stink_x_pos, stink_y_pos))
   
 
 
